@@ -16,31 +16,53 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Verifica FFmpeg antes de importar
 import shutil
+import subprocess
 
 def verificar_ffmpeg():
-    """Verifica se o FFmpeg está disponível"""
-    return shutil.which("ffmpeg") is not None
+    """Verifica se o FFmpeg está disponível, tentando vários métodos"""
+    # Método 1: Verificar no PATH padrão
+    if shutil.which("ffmpeg") is not None:
+        return True
+    
+    # Método 2: Tentar executar diretamente (para Streamlit Cloud)
+    try:
+        result = subprocess.run(
+            ["ffmpeg", "-version"],
+            capture_output=True,
+            timeout=2
+        )
+        if result.returncode == 0:
+            return True
+    except:
+        pass
+    
+    # Método 3: Verificar caminhos comuns no Linux/Streamlit Cloud
+    caminhos_comuns = [
+        "/usr/bin/ffmpeg",
+        "/usr/local/bin/ffmpeg",
+        "/opt/conda/bin/ffmpeg",
+    ]
+    for caminho in caminhos_comuns:
+        if os.path.exists(caminho):
+            # Adiciona ao PATH se encontrar
+            os.environ["PATH"] = os.path.dirname(caminho) + os.pathsep + os.environ.get("PATH", "")
+            return True
+    
+    return False
 
-# Verifica FFmpeg e mostra mensagem amigável se não encontrar
-if not verificar_ffmpeg():
-    st.error("""
-    ❌ **FFmpeg não encontrado!**
+# Verifica FFmpeg mas não bloqueia - mostra aviso
+ffmpeg_disponivel = verificar_ffmpeg()
+
+if not ffmpeg_disponivel:
+    st.warning("""
+    ⚠️ **FFmpeg não encontrado no PATH padrão.**
     
-    O FFmpeg é necessário para processar arquivos de áudio.
+    O Whisper pode funcionar mesmo assim para alguns formatos (MP3, WAV, M4A).
+    Se encontrar erros ao processar, pode ser necessário o FFmpeg.
     
-    **Para instalar localmente:**
-    - **Windows**: `winget install --id=Gyan.FFmpeg -e` (depois feche e reabra o terminal)
-    - **Linux**: `sudo apt install ffmpeg`
-    - **macOS**: `brew install ffmpeg`
-    
-    **Ou baixe manualmente em:** https://ffmpeg.org/download.html
-    
-    ⚠️ **Importante:** Após instalar, feche e reabra o terminal/Streamlit.
-    
-    Se você está no Streamlit Cloud, isso não deveria acontecer. 
-    Por favor, reporte o problema.
+    **Nota:** No Streamlit Cloud, o FFmpeg geralmente está disponível, mas pode não estar no PATH.
+    Você pode tentar processar o áudio mesmo assim.
     """)
-    st.stop()
 
 # Importa a classe TranscritorAudio do módulo transcritor
 try:
@@ -280,8 +302,39 @@ with col1:
                     with col_stat3:
                         st.metric("⏱️ Modelo", modelo_selecionado)
                     
+                except FileNotFoundError as e:
+                    if "ffmpeg" in str(e).lower():
+                        st.error("""
+                        ❌ **Erro: FFmpeg necessário para este formato de áudio.**
+                        
+                        O Whisper precisa do FFmpeg para processar este tipo de arquivo.
+                        No Streamlit Cloud, o FFmpeg deveria estar disponível.
+                        
+                        **Soluções:**
+                        1. Tente um formato diferente (MP3 ou WAV geralmente funcionam melhor)
+                        2. Aguarde alguns segundos e tente novamente
+                        3. Se o problema persistir, o Streamlit Cloud pode estar com problema temporário
+                        """)
+                    else:
+                        st.error(f"❌ Arquivo não encontrado: {str(e)}")
                 except Exception as e:
-                    st.error(f"❌ Erro ao processar: {str(e)}")
+                    error_msg = str(e).lower()
+                    if "ffmpeg" in error_msg or "codec" in error_msg:
+                        st.error("""
+                        ❌ **Erro ao processar áudio.**
+                        
+                        Isso pode ser causado por:
+                        - Formato de áudio não suportado
+                        - FFmpeg não disponível
+                        - Arquivo corrompido
+                        
+                        **Tente:**
+                        - Converter o áudio para MP3 ou WAV
+                        - Usar um arquivo menor
+                        - Tentar novamente em alguns segundos
+                        """)
+                    else:
+                        st.error(f"❌ Erro ao processar: {str(e)}")
                     st.exception(e)
                 finally:
                     # Remove arquivo temporário
@@ -314,7 +367,7 @@ with col2:
 st.markdown("---")
 st.markdown(
     "<div style='text-align: center; color: #666; padding: 1rem;'>"
-    "Desenvolvido com ❤️ usando OpenAI Whisper e Streamlit"
+    "Desenvolvido por Cristiano Lino usando OpenAI Whisper e Streamlit"
     "</div>",
     unsafe_allow_html=True
 )
