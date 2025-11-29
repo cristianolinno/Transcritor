@@ -239,16 +239,18 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 📝 Sobre")
     st.markdown("""
-    Esta ferramenta foi desenvolvida como parte da conclusão do curso de Pós-graduação em Análise de Dados Aplicada a Investigação Criminal, oferecido pela Academia de Plolícia Civil de Santa Catarina.
-    Pós-Graduando: **Cristiano Lino da Silva** - Turma Alpha    
-    
+    <div style="text-align: justify;">
+    Esta ferramenta foi desenvolvida como parte da conclusão do curso de Pós-graduação em Análise de Dados Aplicada a Investigação Criminal, oferecido pela Academia de Polícia Civil de Santa Catarina.
+    Pós-Graduando: <strong>Cristiano Lino da Silva</strong> - Turma Alpha    
+    <br><br>
     Foi utilizado o modelo Whisper da OpenAI para transcrever áudios.
-    
-    **Formatos suportados:**
+    <br><br>
+    <strong>Formatos suportados:</strong>
     - MP3, WAV, M4A, OGG, FLAC
-    
-    **Dica:** Modelos maiores são mais precisos, mas processam mais devagar.
-    """)
+    <br><br>
+    <strong>Dica:</strong> Modelos maiores são mais precisos, mas processam mais devagar.
+    </div>
+    """, unsafe_allow_html=True)
 
 # Área principal
 col1, col2 = st.columns([2, 1])
