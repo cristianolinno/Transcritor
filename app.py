@@ -239,7 +239,10 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 📝 Sobre")
     st.markdown("""
-    Esta ferramenta usa o modelo Whisper da OpenAI para transcrever áudios.
+    Esta ferramenta foi desenvolvida como parte da conclusão do curso de Pós-graduação em Análise de Dados Aplicada a Investigação Criminal, oferecido pela Academia de Plolícia Civil de Santa Catarina.
+    Pós-Graduando: **Cristiano Lino da Silva** - Turma Alpha    
+    
+    Foi utilizado o modelo Whisper da OpenAI para transcrever áudios.
     
     **Formatos suportados:**
     - MP3, WAV, M4A, OGG, FLAC
