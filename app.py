@@ -241,7 +241,7 @@ with st.sidebar:
     st.markdown("""
     <div style="text-align: center;">
     Esta ferramenta foi desenvolvida como parte da conclusão do curso de 
-    <br><br>
+    <br>
     Pós-graduação em Análise de Dados Aplicada a Investigação Criminal, oferecido pela Academia de Polícia Civil de Santa Catarina.
     <br><br>
     Pós-Graduando: <strong>Cristiano Lino da Silva</strong> - Turma Alpha    
