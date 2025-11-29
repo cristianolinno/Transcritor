@@ -1,0 +1,33 @@
+# Ambiente virtual
+venv/
+env/
+ENV/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Arquivos de teste/áudio (opcional - remova se quiser incluir)
+*.mp3
+*.wav
+*.flac
+*.ogg
+*.m4a
+*.aac
+*.txt
+
+# Modelos Whisper (baixados automaticamente)
+.whisper/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema
+.DS_Store
+Thumbs.db
+
