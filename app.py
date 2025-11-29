@@ -84,7 +84,35 @@ except ImportError:
     - openai-whisper
     - streamlit
     - pydub
+    
+    **Solução alternativa:**
+    Se o problema persistir após 10 minutos, tente:
+    - Acesse https://share.streamlit.io
+    - Abra seu app
+    - Clique em "⋮" (três pontos) → "Reboot app"
     """)
+    
+    # Tenta instalar via subprocess como fallback (pode não funcionar no Streamlit Cloud)
+    with st.expander("🔧 Tentar instalar dependências automaticamente"):
+        if st.button("Instalar Whisper agora"):
+            import subprocess
+            import sys
+            with st.spinner("Instalando openai-whisper... Isso pode levar alguns minutos."):
+                try:
+                    result = subprocess.run(
+                        [sys.executable, "-m", "pip", "install", "openai-whisper"],
+                        capture_output=True,
+                        text=True,
+                        timeout=300
+                    )
+                    if result.returncode == 0:
+                        st.success("✅ Whisper instalado! Recarregue a página.")
+                        st.rerun()
+                    else:
+                        st.error(f"❌ Erro na instalação: {result.stderr}")
+                except Exception as e:
+                    st.error(f"❌ Erro: {str(e)}")
+    
     st.stop()
 
 # Importa a classe TranscritorAudio do módulo transcritor
