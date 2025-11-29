@@ -246,7 +246,9 @@ with st.sidebar:
     <br><br>
     Pós-Graduando: 
     <br>
-    <strong>Cristiano Lino da Silva</strong> - Turma Alpha    
+    <strong>Cristiano Lino da Silva</strong> 
+    <br>
+    Turma Alpha    
     <br><br>
     Foi utilizado o modelo Whisper da OpenAI para transcrever áudios.
     <br><br>
