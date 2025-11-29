@@ -4,11 +4,13 @@ Ferramenta simples e poderosa para transcrever áudios em texto usando inteligê
 
 ## 📋 Funcionalidades
 
+- ✅ **Menu interativo** amigável para usuários leigos
 - ✅ Transcreve áudios em diversos formatos (MP3, WAV, M4A, OGG, FLAC)
 - ✅ Suporta múltiplos idiomas (português, inglês, espanhol, etc.)
 - ✅ Busca palavras específicas no texto transcrito
 - ✅ Modelos de diferentes tamanhos (tiny, base, small, medium, large)
 - ✅ Detecção automática de idioma
+- ✅ Interface de linha de comando para usuários avançados
 
 ## 🚀 Como Usar (Instalação Local)
 
@@ -30,6 +32,24 @@ Siga as instruções detalhadas no arquivo [INSTALACAO.md](INSTALACAO.md)
 - Instale as dependências: `pip install -r requirements.txt`
 
 ### 3. Usar o Transcritor
+
+#### 🖱️ Menu Interativo (Recomendado para Iniciantes)
+
+Para usuários que preferem uma interface mais amigável, execute sem argumentos:
+
+```bash
+python transcritor.py
+```
+
+O menu interativo oferece:
+- ✅ Interface visual com opções numeradas
+- ✅ Guia passo a passo
+- ✅ Validação automática de arquivos
+- ✅ Sugestões inteligentes de nomes de arquivo
+
+#### ⌨️ Linha de Comando (Avançado)
+
+Para usuários experientes que preferem comandos diretos:
 
 ```bash
 # Transcrever um áudio

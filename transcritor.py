@@ -258,6 +258,322 @@ class TranscritorAudio:
         return texto, resultados_busca
 
 
+def limpar_tela():
+    """Limpa a tela do terminal"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def menu_interativo():
+    """Menu interativo para usuários leigos"""
+    limpar_tela()
+    
+    print("="*60)
+    print("  🎤 TRANSCRITOR DE ÁUDIO - MENU INTERATIVO")
+    print("="*60)
+    print()
+    print("Escolha uma opção:")
+    print()
+    print("  1 - Transcrever áudio (apenas exibir na tela)")
+    print("  2 - Transcrever áudio e salvar em arquivo")
+    print("  3 - Transcrever áudio e buscar palavras")
+    print("  4 - Sair")
+    print()
+    print("="*60)
+    
+    while True:
+        try:
+            opcao = input("Digite o número da opção (1-4): ").strip()
+            
+            if opcao == '1':
+                executar_transcricao_simples()
+                break
+            elif opcao == '2':
+                executar_transcricao_com_salvamento()
+                break
+            elif opcao == '3':
+                executar_transcricao_com_busca()
+                break
+            elif opcao == '4':
+                print("\nAté logo! 👋")
+                sys.exit(0)
+            else:
+                print("\n❌ Opção inválida! Digite um número entre 1 e 4.\n")
+        except KeyboardInterrupt:
+            print("\n\nOperação cancelada pelo usuário.")
+            sys.exit(0)
+        except Exception as e:
+            print(f"\n❌ Erro: {e}\n")
+
+
+def solicitar_arquivo_audio():
+    """Solicita o caminho do arquivo de áudio"""
+    while True:
+        arquivo = input("\n📁 Informe o caminho/nome do arquivo de áudio: ").strip()
+        
+        # Remove aspas se o usuário colocar
+        arquivo = arquivo.strip('"\'')
+        
+        if not arquivo:
+            print("❌ Por favor, informe um arquivo.")
+            continue
+        
+        if not os.path.exists(arquivo):
+            print(f"❌ Arquivo não encontrado: {arquivo}")
+            print("   Verifique se o caminho está correto e tente novamente.")
+            continuar = input("\n   Deseja tentar novamente? (s/n): ").strip().lower()
+            if continuar != 's':
+                return None
+        else:
+            return arquivo
+
+
+def solicitar_arquivo_saida(arquivo_entrada=None):
+    """Solicita o nome do arquivo de saída"""
+    while True:
+        if arquivo_entrada:
+            nome_sugerido = Path(arquivo_entrada).stem + "_transcricao.txt"
+            print(f"\n💾 Nome sugerido: {nome_sugerido}")
+            arquivo_saida = input("   Informe o nome do arquivo de saída (ou Enter para usar o sugerido): ").strip()
+            
+            if not arquivo_saida:
+                arquivo_saida = nome_sugerido
+        else:
+            arquivo_saida = input("\n💾 Informe o nome do arquivo de saída (.txt): ").strip()
+        
+        # Remove aspas se o usuário colocar
+        arquivo_saida = arquivo_saida.strip('"\'')
+        
+        if not arquivo_saida:
+            print("❌ Por favor, informe um nome de arquivo.")
+            continue
+        
+        # Adiciona extensão .txt se não tiver
+        if not arquivo_saida.endswith('.txt'):
+            arquivo_saida += '.txt'
+        
+        # Verifica se arquivo já existe
+        if os.path.exists(arquivo_saida):
+            sobrescrever = input(f"⚠️  O arquivo '{arquivo_saida}' já existe. Deseja sobrescrever? (s/n): ").strip().lower()
+            if sobrescrever != 's':
+                continue
+        
+        return arquivo_saida
+
+
+def escolher_modelo():
+    """Permite escolher o modelo Whisper"""
+    print("\n" + "="*60)
+    print("  Escolha o modelo Whisper:")
+    print("="*60)
+    print("  1 - tiny   (mais rápido, menos preciso)")
+    print("  2 - base   (equilíbrio - RECOMENDADO)")
+    print("  3 - small  (mais preciso, mais lento)")
+    print("  4 - medium (muito preciso, bem lento)")
+    print("  5 - large  (máxima precisão, muito lento)")
+    print("="*60)
+    
+    modelos = {
+        '1': 'tiny',
+        '2': 'base',
+        '3': 'small',
+        '4': 'medium',
+        '5': 'large'
+    }
+    
+    while True:
+        opcao = input("\nDigite o número da opção (1-5) ou Enter para usar 'base': ").strip()
+        
+        if not opcao:
+            return 'base'
+        
+        if opcao in modelos:
+            return modelos[opcao]
+        else:
+            print("❌ Opção inválida! Digite um número entre 1 e 5.")
+
+
+def escolher_idioma():
+    """Permite escolher o idioma"""
+    print("\n" + "="*60)
+    print("  Escolha o idioma:")
+    print("="*60)
+    print("  1 - Português (pt)")
+    print("  2 - Inglês (en)")
+    print("  3 - Espanhol (es)")
+    print("  4 - Detecção automática")
+    print("="*60)
+    
+    idiomas = {
+        '1': 'pt',
+        '2': 'en',
+        '3': 'es',
+        '4': None  # None = detecção automática
+    }
+    
+    while True:
+        opcao = input("\nDigite o número da opção (1-4) ou Enter para usar 'Português': ").strip()
+        
+        if not opcao:
+            return 'pt'
+        
+        if opcao in idiomas:
+            return idiomas[opcao]
+        else:
+            print("❌ Opção inválida! Digite um número entre 1 e 4.")
+
+
+def executar_transcricao_simples():
+    """Executa transcrição simples (apenas exibir)"""
+    print("\n" + "="*60)
+    print("  OPÇÃO 1: TRANSCREVER ÁUDIO")
+    print("="*60)
+    
+    arquivo = solicitar_arquivo_audio()
+    if not arquivo:
+        return
+    
+    modelo = escolher_modelo()
+    idioma = escolher_idioma()
+    
+    try:
+        print("\n⏳ Inicializando transcritor...")
+        transcritor = TranscritorAudio(modelo=modelo)
+        
+        texto = transcritor.transcrever(arquivo_audio=arquivo, idioma=idioma)
+        
+        print("\n" + "="*60)
+        print("TRANSCRIÇÃO COMPLETA:")
+        print("="*60)
+        print(texto)
+        print("="*60)
+        
+        input("\n\nPressione Enter para continuar...")
+        
+    except KeyboardInterrupt:
+        print("\n\nOperação cancelada pelo usuário.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"\n❌ ERRO: {e}")
+        import traceback
+        traceback.print_exc()
+        input("\n\nPressione Enter para continuar...")
+
+
+def executar_transcricao_com_salvamento():
+    """Executa transcrição e salva em arquivo"""
+    print("\n" + "="*60)
+    print("  OPÇÃO 2: TRANSCREVER E SALVAR")
+    print("="*60)
+    
+    arquivo = solicitar_arquivo_audio()
+    if not arquivo:
+        return
+    
+    arquivo_saida = solicitar_arquivo_saida(arquivo)
+    if not arquivo_saida:
+        return
+    
+    modelo = escolher_modelo()
+    idioma = escolher_idioma()
+    
+    try:
+        print("\n⏳ Inicializando transcritor...")
+        transcritor = TranscritorAudio(modelo=modelo)
+        
+        texto = transcritor.transcrever(
+            arquivo_audio=arquivo,
+            idioma=idioma,
+            salvar_arquivo=arquivo_saida
+        )
+        
+        print("\n" + "="*60)
+        print("TRANSCRIÇÃO COMPLETA:")
+        print("="*60)
+        print(texto)
+        print("="*60)
+        print(f"\n✅ Transcrição salva em: {arquivo_saida}")
+        
+        input("\n\nPressione Enter para continuar...")
+        
+    except KeyboardInterrupt:
+        print("\n\nOperação cancelada pelo usuário.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"\n❌ ERRO: {e}")
+        import traceback
+        traceback.print_exc()
+        input("\n\nPressione Enter para continuar...")
+
+
+def executar_transcricao_com_busca():
+    """Executa transcrição e busca palavras"""
+    print("\n" + "="*60)
+    print("  OPÇÃO 3: TRANSCREVER E BUSCAR PALAVRAS")
+    print("="*60)
+    
+    arquivo = solicitar_arquivo_audio()
+    if not arquivo:
+        return
+    
+    print("\n🔍 Informe as palavras ou frases que deseja buscar.")
+    print("   (Você pode digitar várias palavras separadas por vírgula)")
+    palavras_input = input("   Palavras para buscar: ").strip()
+    
+    if not palavras_input:
+        print("❌ Nenhuma palavra informada. Operação cancelada.")
+        return
+    
+    # Separa palavras por vírgula
+    palavras_busca = [p.strip().strip('"\'') for p in palavras_input.split(',')]
+    palavras_busca = [p for p in palavras_busca if p]  # Remove vazias
+    
+    if not palavras_busca:
+        print("❌ Nenhuma palavra válida informada. Operação cancelada.")
+        return
+    
+    salvar = input("\n💾 Deseja salvar a transcrição em arquivo? (s/n): ").strip().lower()
+    arquivo_saida = None
+    if salvar == 's':
+        arquivo_saida = solicitar_arquivo_saida(arquivo)
+        if not arquivo_saida:
+            arquivo_saida = None
+    
+    modelo = escolher_modelo()
+    idioma = escolher_idioma()
+    
+    try:
+        print("\n⏳ Inicializando transcritor...")
+        transcritor = TranscritorAudio(modelo=modelo)
+        
+        texto, resultados = transcritor.transcrever_e_buscar(
+            arquivo_audio=arquivo,
+            palavras_busca=palavras_busca,
+            idioma=idioma,
+            salvar_transcricao=arquivo_saida,
+            case_sensitive=False
+        )
+        
+        print("\n" + "="*60)
+        print("TRANSCRIÇÃO COMPLETA:")
+        print("="*60)
+        print(texto)
+        print("="*60)
+        
+        if arquivo_saida:
+            print(f"\n✅ Transcrição salva em: {arquivo_saida}")
+        
+        input("\n\nPressione Enter para continuar...")
+        
+    except KeyboardInterrupt:
+        print("\n\nOperação cancelada pelo usuário.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"\n❌ ERRO: {e}")
+        import traceback
+        traceback.print_exc()
+        input("\n\nPressione Enter para continuar...")
+
+
 def main():
     """Função principal com interface de linha de comando"""
     parser = argparse.ArgumentParser(
@@ -279,6 +595,9 @@ Exemplos de uso:
   
   # Busca case-sensitive:
   python transcritor.py audio.mp3 -b "Python" -c
+  
+  # Executar menu interativo (sem argumentos):
+  python transcritor.py
         """
     )
     
@@ -295,10 +614,10 @@ Exemplos de uso:
     
     args = parser.parse_args()
     
-    # Se não forneceu arquivo, mostra ajuda
+    # Se não forneceu arquivo, mostra menu interativo
     if args.arquivo is None:
-        parser.print_help()
-        sys.exit(1)
+        menu_interativo()
+        return
     
     # Valida arquivo
     if not os.path.exists(args.arquivo):
