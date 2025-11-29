@@ -238,67 +238,18 @@ with st.sidebar:
     
     st.markdown("---")
     st.markdown("### 📝 Sobre")
-    
-    # Card estilizado com informações
     st.markdown("""
-    <div style="
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin: 10px 0;
-    ">
-        <div style="text-align: center; margin-bottom: 15px;">
-            <p style="
-                font-size: 14px;
-                line-height: 1.6;
-                color: #2c3e50;
-                margin: 0;
-            ">
-                Esta ferramenta foi desenvolvida como parte da conclusão do curso de 
-                <strong>Pós-graduação em Análise de Dados Aplicada a Investigação Criminal</strong>, 
-                oferecido pela <strong>Academia de Polícia Civil de Santa Catarina</strong>.
-            </p>
-        </div>
-        
-        <div style="
-            text-align: center;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 8px;
-            margin: 15px 0;
-        ">
-            <p style="margin: 0; font-size: 13px; color: #34495e;">
-                <strong>Pós-Graduando:</strong> <span style="color: #667eea; font-weight: bold;">Cristiano Lino da Silva</span> - Turma Alpha
-            </p>
-        </div>
-        
-        <div style="text-align: center; margin: 15px 0;">
-            <p style="font-size: 13px; color: #555; margin: 0;">
-                Utiliza o modelo <strong>Whisper</strong> da OpenAI para transcrição de áudios.
-            </p>
-        </div>
-        
-        <div style="
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(0,0,0,0.1);
-        ">
-            <div style="text-align: center;">
-                <p style="margin: 0; font-size: 12px; color: #7f8c8d;">
-                    <strong>Formatos:</strong><br>
-                    MP3, WAV, M4A, OGG, FLAC
-                </p>
-            </div>
-            <div style="text-align: center;">
-                <p style="margin: 0; font-size: 12px; color: #7f8c8d;">
-                    <strong>💡 Dica:</strong><br>
-                    Modelos maiores = mais precisão
-                </p>
-            </div>
-        </div>
+    <div style="text-align: center;">
+    Esta ferramenta foi desenvolvida como parte da conclusão do curso de Pós-graduação em Análise de Dados Aplicada a Investigação Criminal, oferecido pela Academia de Polícia Civil de Santa Catarina.
+    <br><br>
+    Pós-Graduando: <strong>Cristiano Lino da Silva</strong> - Turma Alpha    
+    <br><br>
+    Foi utilizado o modelo Whisper da OpenAI para transcrever áudios.
+    <br><br>
+    <strong>Formatos suportados:</strong>
+    - MP3, WAV, M4A, OGG, FLAC
+    <br><br>
+    <strong>Dica:</strong> Modelos maiores são mais precisos, mas processam mais devagar.
     </div>
     """, unsafe_allow_html=True)
 
