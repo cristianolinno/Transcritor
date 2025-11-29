@@ -57,9 +57,14 @@ if sys.platform == "win32":
 try:
     import whisper
 except ImportError:
-    print("ERRO: Biblioteca whisper não instalada!")
-    print("Execute: pip install -r requirements.txt")
-    sys.exit(1)
+    # Não faz sys.exit se estiver sendo importado como módulo
+    if __name__ == "__main__" or (len(sys.argv) > 0 and sys.argv[0].endswith('transcritor.py')):
+        print("ERRO: Biblioteca whisper não instalada!")
+        print("Execute: pip install -r requirements.txt")
+        sys.exit(1)
+    else:
+        # Se for importado como módulo, apenas define whisper como None
+        whisper = None
 
 # Verifica se FFmpeg está disponível antes de usar
 def verificar_ffmpeg():

@@ -64,12 +64,39 @@ if not ffmpeg_disponivel:
     Você pode tentar processar o áudio mesmo assim.
     """)
 
+# Verifica se whisper está instalado antes de importar
+try:
+    import whisper
+    WHISPER_DISPONIVEL = True
+except ImportError:
+    WHISPER_DISPONIVEL = False
+    st.error("""
+    ❌ **Biblioteca Whisper não instalada!**
+    
+    O Streamlit Cloud está instalando as dependências. Isso pode levar alguns minutos.
+    
+    **O que fazer:**
+    1. Aguarde 2-3 minutos para o deploy completar
+    2. Recarregue a página (F5)
+    3. Se o problema persistir, verifique os logs no Streamlit Cloud
+    
+    **Dependências necessárias:**
+    - openai-whisper
+    - streamlit
+    - pydub
+    """)
+    st.stop()
+
 # Importa a classe TranscritorAudio do módulo transcritor
 try:
     from transcritor import TranscritorAudio, verificar_ffmpeg as verificar_ffmpeg_transcritor
 except ImportError as e:
     st.error(f"❌ Erro ao importar módulo transcritor: {str(e)}")
     st.info("💡 Verifique se todos os arquivos estão presentes e as dependências instaladas.")
+    st.stop()
+except Exception as e:
+    st.error(f"❌ Erro ao carregar transcritor: {str(e)}")
+    st.info("💡 Aguarde alguns minutos e recarregue a página.")
     st.stop()
 
 # Configuração da página
