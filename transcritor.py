@@ -67,17 +67,19 @@ def verificar_ffmpeg():
     import shutil
     return shutil.which("ffmpeg") is not None
 
-if not verificar_ffmpeg():
-    print("\n" + "="*60)
-    print("ERRO: FFmpeg não encontrado!")
-    print("="*60)
-    print("O FFmpeg é necessário para processar arquivos de áudio.")
-    print("\nPara instalar no Windows:")
-    print("  1. Execute: winget install --id=Gyan.FFmpeg -e")
-    print("  2. Feche e reabra este terminal")
-    print("\nOu baixe manualmente em: https://ffmpeg.org/download.html")
-    print("="*60)
-    sys.exit(1)
+# Só verifica FFmpeg se executado como script principal (não quando importado como módulo)
+if __name__ == "__main__" or (len(sys.argv) > 0 and sys.argv[0].endswith('transcritor.py')):
+    if not verificar_ffmpeg():
+        print("\n" + "="*60)
+        print("ERRO: FFmpeg não encontrado!")
+        print("="*60)
+        print("O FFmpeg é necessário para processar arquivos de áudio.")
+        print("\nPara instalar no Windows:")
+        print("  1. Execute: winget install --id=Gyan.FFmpeg -e")
+        print("  2. Feche e reabra este terminal")
+        print("\nOu baixe manualmente em: https://ffmpeg.org/download.html")
+        print("="*60)
+        sys.exit(1)
 
 # Tenta importar pydub, mas não é obrigatório (Python 3.13 pode ter problemas)
 try:

@@ -4,6 +4,7 @@ Ferramenta simples e poderosa para transcrever áudios em texto usando inteligê
 
 ## 📋 Funcionalidades
 
+- ✅ **Versão Web** com interface visual moderna (drag & drop)
 - ✅ **Menu interativo** amigável para usuários leigos
 - ✅ Transcreve áudios em diversos formatos (MP3, WAV, M4A, OGG, FLAC)
 - ✅ Suporta múltiplos idiomas (português, inglês, espanhol, etc.)
@@ -11,6 +12,26 @@ Ferramenta simples e poderosa para transcrever áudios em texto usando inteligê
 - ✅ Modelos de diferentes tamanhos (tiny, base, small, medium, large)
 - ✅ Detecção automática de idioma
 - ✅ Interface de linha de comando para usuários avançados
+
+## 🌐 Versão Web (Recomendado - Sem Instalação)
+
+A versão web está disponível e pode ser acessada sem instalar nada! 
+
+**Características:**
+- 🎨 Interface moderna e intuitiva
+- 📤 Upload por drag & drop
+- ⚙️ Configurações fáceis na barra lateral
+- 💾 Download da transcrição em .txt
+- 📊 Estatísticas do texto transcrito
+
+**Para disponibilizar a versão web:**
+Veja o guia completo em [DEPLOY_WEB.md](DEPLOY_WEB.md)
+
+**Testar localmente:**
+```bash
+pip install streamlit
+streamlit run app.py
+```
 
 ## 🚀 Como Usar (Instalação Local)
 
